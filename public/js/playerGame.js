@@ -100,15 +100,3 @@ socket.on('GameOver', function(){
     document.getElementById('message').style.display = "block";
     document.getElementById('message').innerHTML = "GAME OVER";
 });
-
-
-/*
- * Web socket to refresh page (usually in case when 
- * a user with same name is already in the game)
- */
-socket.on('UserExists', function(){
-    var error = document.querySelector('#error');
-    error.innerHTML = 'A User with that name already exists! <br /> Please enter a different name!';
-    error.style.display = 'block';
-    window.location = '/';
-});
