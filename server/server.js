@@ -34,6 +34,7 @@ io.on('connection', (socket) => {
     
     //When host connects for the first time
     socket.on('host-join', (data) =>{
+        console.log(data);
         
         //Check to see if id passed in url corresponds to id of kahoot game in database
         MongoClient.connect(url, function(err, db) {
@@ -120,7 +121,7 @@ io.on('connection', (socket) => {
     
     //When player connects for the first time
     socket.on('player-join', (params) => {
-        
+        var startGame = true;
         var gameFound = false; //If a game is found with pin provided by player
         
         //For each game in the Games class
@@ -131,16 +132,31 @@ io.on('connection', (socket) => {
                 console.log('Player connected to game');
                 
                 var hostId = games.games[i].hostId; //Get the id of host of game
-                
-                
-                players.addPlayer(hostId, socket.id, params.name, {score: 0, answer: 0}); //add player to game
-                
-                socket.join(params.pin); //Player is joining room based on pin
+
+                console.log('Player\'s name is: ' + params.name);
                 
                 var playersInGame = players.getPlayers(hostId); //Getting all players in game
+                playersInGame.find(player => {
+                    if(params.name.toUpperCase() == player.name.toUpperCase()) {
+                        console.log('A player with that name already exists!');
+                        socket.emit('PageRefresh');
+                        startGame = false;
+                        return 
+                    }
+                });
                 
-                io.to(params.pin).emit('updatePlayerLobby', playersInGame);//Sending host player data to display
-                gameFound = true; //Game has been found
+                if(startGame){
+                    players.addPlayer(hostId, socket.id, params.name, {score: 0, answer: 0}); //add player to game
+                    
+                    socket.join(params.pin); //Player is joining room based on pin
+                    
+                    playersInGame = players.getPlayers(hostId); //Getting all players in game
+
+                    console.log(playersInGame);
+                
+                    io.to(params.pin).emit('updatePlayerLobby', playersInGame);//Sending host player data to display
+                    gameFound = true; //Game has been found
+                }
             }
         }
         
