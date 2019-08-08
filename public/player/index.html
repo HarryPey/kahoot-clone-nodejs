@@ -1,16 +1,21 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Lobby | KahootClone</title>
+        <title>Lobby | KwizzMania</title>
         <link rel = "stylesheet" href = "../css/lobby.css">
         <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body>
-        <h1 id = "title1">Waiting on host to start game</h1>
-        <h3 id = "title2">Do you see your name on the screen?</h3>
-        <div class="loader"></div>
-        <br/>
+        <div id="user-joined">
+            <h1 id = "title1">Waiting on host to start game</h1>
+            <h3 id = "title2">Do you see your name on the screen?</h3>
+            <div class="loader"></div>
+        </div>
+        <div id="user-exists" class="error">
+            <h1>A user already exists with the name you entered! <br />
+            <a href="/">Click here to try with a different name!</a></h1>
+        </div>
     </body>
     <script src = "../socket.io/socket.io.js"></script>
     <script src = "../js/libs/jqueryLibrary.js"></script>

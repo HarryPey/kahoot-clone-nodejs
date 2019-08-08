@@ -49,6 +49,14 @@ body {
     animation: spin 1.5s linear infinite;
 }
 
+#user-exists.error {
+    color: #ff0000;
+    display: none;
+    font-family: sans-serif;
+    width: 100%;
+    text-align: center;
+}
+
 /* Safari */
 @-webkit-keyframes spin {
     0% { -webkit-transform: rotate(0deg); }

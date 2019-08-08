@@ -7,14 +7,24 @@
         <link href="https://fonts.googleapis.com/css?family=Tajawal" rel="stylesheet">
     </head>
     <body>
-        <button id = "cancel" onclick = "endGame()">Cancel Game</button>
         <h2 id = "title">Join this Game using the Game Pin: </h2>
         <h1 id = "gamePinText"></h1>
-        <textarea style = "width: 700px; height: 500px;" readonly id = 'players'></textarea>
+
+        <h3 id="players-info-line">
+            Player count: 
+            <span id="player-count"></span>
+        </h3>
+        <!-- <textarea style = "width: 700px; height: 500px;" readonly id = 'players'></textarea> -->
+        
+        <div class="players-wrapper">
+            <div id="players">Waiting for players to join...</div>
+        </div>
         <br>
-        <button id = 'start' onclick = "startGame()">Start Game</button>
-        <br>
-        <br>
+
+        <div id="button-wrapper">
+            <button id="start" onclick = "startGame()">Start Game</button>
+            <button id="cancel" onclick = "endGame()">Cancel Game</button>
+        </div>
         <script src = "../socket.io/socket.io.js"></script>
         <script src = "../js/libs/jqueryLibrary.js"></script>
         <script src = "../js/libs//deparam.js"></script>

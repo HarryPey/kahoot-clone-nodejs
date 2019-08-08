@@ -123,6 +123,7 @@ io.on('connection', (socket) => {
     socket.on('player-join', (params) => {
         var startGame = true;
         var gameFound = false; //If a game is found with pin provided by player
+        var userExists = false;
         
         //For each game in the Games class
         for(var i = 0; i < games.games.length; i++){
@@ -139,7 +140,7 @@ io.on('connection', (socket) => {
                 playersInGame.find(player => {
                     if(params.name.toUpperCase() == player.name.toUpperCase()) {
                         console.log('A player with that name already exists!');
-                        socket.emit('PageRefresh');
+                        userExists = true;
                         startGame = false;
                         return 
                     }
@@ -161,11 +162,11 @@ io.on('connection', (socket) => {
         }
         
         //If the game has not been found
-        if(gameFound == false){
+        if (userExists){            
+            socket.emit('UserExists');
+        } else if(gameFound == false){
             socket.emit('noGameFound'); //Player is sent back to 'join' page because game was not found with pin
         }
-        
-        
     });
     
     //When the player connects from game view

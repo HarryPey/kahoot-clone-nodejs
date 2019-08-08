@@ -23,4 +23,10 @@ socket.on('gameStartedPlayer', function(){
     window.location.href="/player/game/" + "?id=" + socket.id;
 });
 
-
+socket.on('UserExists', function(){    
+    var error = document.querySelector('.error');
+    // error.innerHTML = 'A User with that name already exists! <br /> Please enter a different name!';
+    error.style.display = 'block';
+    document.querySelector('#user-joined').style.display = 'none';
+    // window.location = '/';
+});
