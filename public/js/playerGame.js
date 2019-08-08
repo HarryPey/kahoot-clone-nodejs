@@ -101,3 +101,11 @@ socket.on('GameOver', function(){
     document.getElementById('message').innerHTML = "GAME OVER";
 });
 
+
+/*
+ * Web socket to refresh page (usually in case when 
+ * a user with same name is already in the game)
+ */
+socket.on('PageRefresh', function(){
+    location.reload();
+});
