@@ -2,54 +2,129 @@
 <html>
     <head>
         <title>Creator | KwizzMania</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="mobile-web-app-capable" content="yes">
         <link rel = "stylesheet" href = "../../css/quizCreator.css">
         <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
-    </head>
-    <body onload = "setBGColor()">
-        <h1 id = "title">Kahoot Quiz Creator Studio</h1>
-        
-        <div class="form-field">
-            <label id = "quizTitle">Quiz Title</label>
-            <input id = "name" type = "text" name="name" autofocus/>
-        </div>
-        <br>
-        <br>
-        <div id = "allQuestions">
-            <div id="question-field">
-                <label>Question 1: </label>
-                <input class = "question" id = "q1" type = "text" autofocus/>
-                <br>
-                <br>
-                <label>Answer 1: </label>
-                <input id = "1a1" type = "text" autofocus/>
-                <label>Answer 2: </label>
-                <input id = "1a2" type = "text" autofocus/>
-                <br>
-                <br>
-                <label>Answer 3: </label>
-                <input id = "1a3"  type = "text"autofocus/>
-                <label>Answer 4: </label>
-                <input id = "1a4"  type = "text" autofocus/>
-                <br>
-                <br>
-                <label>Correct Answer (1-4) :</label>
-                <input class = "correct" id = "correct1"  type = "number" autofocus/>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.2/mustache.min.js"></script>
+
+        <script id="question-field-template" type="x-tmpl-mustache">
+            <div class="question-field__title">
+                <div class="question-field__title__question-row">
+                    <label>{{ question_no }}:</label>
+                    <input
+                        class="question"
+                        id="q{{ question_no }}"
+                        type="text"
+                        placeholder="Enter question here"
+                        autofocus />
+                    <button
+                        class="question-field__title__question-row__up-arrow"
+                        onclick="moveQuestionUp({{ question_no }})">
+                        &uarr;
+                    </button>
+                    <button
+                        class="question-field__title__question-row__down-arrow"
+                        onclick="moveQuestionDown({{ question_no }})">
+                        &darr;
+                    </button>
+                </div>
             </div>
+            <div class="question-field__options">
+                <div class="question-field__options_option">
+                    <label>Option 1:</label>
+                    <input type="text" id="{{ question_no }}a1" autofocus />
+                </div>
+                <div class="question-field__options_option">
+                    <label>Option 2:</label>
+                    <input type="text" id="{{ question_no }}a2" autofocus />
+                </div>
+                <div class="question-field__options_option">
+                    <label>Option 3:</label>
+                    <input type="text" id="{{ question_no }}a3" autofocus />
+                </div>
+                <div class="question-field__options_option">
+                    <label>Option 4:</label>
+                    <input type="text" id="{{ question_no }}a4" autofocus />
+                </div>
+            </div>
+            <div class="question-field__correct-answer">
+                <label>Correct Answer:</label>
+                <select class="correct" id="correct{{ question_no }}">
+                    <Option value="1">Option 1</option>
+                    <Option value="2">Option 2</option>
+                    <Option value="3">Option 3</option>
+                    <Option value="4">Option 4</option>
+                </select>
+            </div>
+            <div class="question-field__custom-duration">
+                <label>Custom Duration?</label>
+
+                <select
+                    class="question-field__custom-duration__question"
+                    onchange="customDurationResponse({{ question_no }})">
+                    <option value="yes">Yes</option>
+                    <option value="no" selected>No</option>
+                </select>
+
+                <span
+                    class="question-field__custom-duration__response">
+                    <input
+                        type="number"
+                        id="cd{{ question_no }}"
+                        min="5"
+                        max="3600"
+                        value="20"/>
+                        <label>seconds</label>
+                </span>
+            </div>
+        </script>
+    </head>
+    <body>
+        <h1 id="title">KwizzMania Quiz Creator</h1>
+        
+        <div id="subtitle">
+            <label id="quiz-title">Quiz Title:</label>
+            <input id="name" type = "text" name="name" autofocus/>
         </div>
-        <br>
-        <button onclick = "addQuestion()">Add another question</button>
-        
-        <br>
-        <br>
-        
-        <div class="form-field">
-            <button onclick = "updateDatabase()">Create Quiz</button>
+        <div class="question-section">
+            <div class="question-section__title">
+                <h3>Questions</h3>
+                <button onclick="addQuestion()">+ Add</button>
+            </div>
+            <div id="all-questions">
+                <!-- <div id="question-field">
+                    <label>Question 1: </label>
+                    <input class = "question" id = "q1" type = "text" autofocus/>
+                    <br>
+                    <br>
+                    <label>Option 1: </label>
+                    <input id = "1a1" type = "text" autofocus/>
+                    <label>Option 2: </label>
+                    <input id = "1a2" type = "text" autofocus/>
+                    <br>
+                    <br>
+                    <label>Option 3: </label>
+                    <input id = "1a3"  type = "text"autofocus/>
+                    <label>Option 4: </label>
+                    <input id = "1a4"  type = "text" autofocus/>
+                    <br>
+                    <br>
+                    <label>Correct Answer (1-4) :</label>
+                    <input class = "correct" id = "correct1"  type = "number" autofocus/>
+                </div> -->
+            </div>
+            
         </div>
-        
-        <br>
-        
-        <button onclick = 'cancelQuiz()'>Cancel quiz and return to quiz selection</button>
-        
+
+        <div id="actions">
+            <button
+                onclick="updateDatabase()"
+                class="actions__create">Create</button>
+            <button onclick="cancelQuiz()"
+                class="actions__cancel">Cancel</button>
+        </div>
+
         <script src = "../../socket.io/socket.io.js"></script>
         <script src = "../../js/quizCreator.js"></script>
     </body>
