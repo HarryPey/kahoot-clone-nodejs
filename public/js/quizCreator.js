@@ -5,13 +5,13 @@ var questionFieldTemplate = document.querySelector('#question-field-template').i
 function setQuestion(qNo, question) {
     var q = '#question-' + qNo;
     var quesElem = document.querySelector(q);
-    var cdQSel = document.querySelector(q + ' question-field__custom-duration__question');
+    var cdQSel = document.querySelector(q + ' .question-field__custom-duration__question');
     var cdResp = document.querySelector('#cd' + qNo);
 
     quesElem.querySelector('#q'+qNo).value = question.question;
 
     for(var i=0; i<4; ++i){
-        document.querySelector('#'+qNo+'a'+(i+1)).value = question.answers[i];
+        document.querySelector('#q'+qNo+'a'+(i+1)).value = question.answers[i];
     }
     document.getElementById('correct' + qNo).value = question.correct;
 
@@ -27,7 +27,7 @@ function setQuestion(qNo, question) {
 function getAllQuestions(){
     var questions = [];
     for(var i = 1; i <= questionNum; i++){
-        questions.push(fetchQuestion(i));
+        questions.push(getQuestion(i));
     }
 
     return questions;
@@ -35,18 +35,19 @@ function getAllQuestions(){
 
 function getQuestion(qNo) {
     var cd = null;
+    var preSel = 'q' + qNo;
 
     if(document.querySelector('#question-'+qNo+' .question-field__custom-duration__question').value == 'yes'){
         cd = document.querySelector('#cd'+qNo).value;
     }
 
     return {
-        question: document.getElementById('q' + qNo).value,
+        question: document.getElementById(preSel).value,
         answers: [
-            document.getElementById(qNo + 'a1').value,
-            document.getElementById(qNo + 'a2').value,
-            document.getElementById(qNo + 'a3').value,
-            document.getElementById(qNo + 'a4').value,
+            document.getElementById(preSel + 'a1').value,
+            document.getElementById(preSel + 'a2').value,
+            document.getElementById(preSel + 'a3').value,
+            document.getElementById(preSel + 'a4').value,
         ],
         correct: document.getElementById('correct' + qNo).value,
         customDuration: cd,
@@ -154,8 +155,8 @@ function cancelQuiz(){
     }
 }
 
-socket.on('startGameFromCreator', function(data){
-    window.location.href = "../../host/?id=" + data;
+socket.on('gameSaved', function(data){
+    window.location.href = '/create';
 });
 
 // function randomColor(){

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Admin | KwizzMania</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
+    <link rel="stylesheet" href="../css/admin.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.2/mustache.min.js"></script>
+    <script src = "../../socket.io/socket.io.js"></script>
+    <script id="login-template" type="x-tmpl-mustache" src="./dashboard-template.html">
+        <h2 class="admin__content__title">Login</h2>
+        <div class="admin__content__container">
+            <div class="admin__content__container__login">
+                <div class="admin__content__container__login__validation-message"><ul></ul></div>
+                <label>Username</label>
+                <input id="username" type="text" />
+                <label>Password</label>
+                <input id="password" type="password" />
+                <button onclick="login()">Login</button>
+            </div>
+        </div>
+    </script>
+    <script id="dashboard-template" type="x-tmpl-mustache" src="./dashboard-template.html">
+        <h2 class="admin__content__title">Dashboard</h2>
+        <div class="admin__content__container">
+            <div class="admin__content__container__left">
+                <div class="admin__content__container__left__active-game">
+                    There are currently {{ activeGames }} active games!
+                </div>
+                <div class="admin__content__container__left__buttons">
+                    <button>+ New Question Set</button>
+                    <button>+ New Game</button>
+                </div>
+            </div>
+
+            <div class="admin__content__container__right">
+                <div class="admin__content__container__right__q-set">
+                    <ul>
+                        {{ #quiz }}
+                            <li><a href="{{ quizLink }}">{{ quizName }}</a></li>
+                        {{ /quiz }}
+                    </ul>
+                </div>
+                
+                <div class="admin__content__container__right__game-history">
+                    <ul>
+                        {{ #gamesHistory }}
+                            <li>
+                                <a href="{{ gameLink }}">
+                                    {{ gameName }}
+                                </a>
+                            </li>
+                        {{ /gamesHistory }}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </script>
+</head>
+<body>
+    <h1 class="page-title">KwizzMania Admin Panel</h1>
+    <div class="admin__content">
+
+    </div>        
+    <script src="../js/admin.js"></script>
+</body>
+</html>

@@ -33,19 +33,19 @@
             <div class="question-field__options">
                 <div class="question-field__options_option">
                     <label>Option 1:</label>
-                    <input type="text" id="{{ question_no }}a1" autofocus />
+                    <input type="text" id="q{{ question_no }}a1" autofocus />
                 </div>
                 <div class="question-field__options_option">
                     <label>Option 2:</label>
-                    <input type="text" id="{{ question_no }}a2" autofocus />
+                    <input type="text" id="q{{ question_no }}a2" autofocus />
                 </div>
                 <div class="question-field__options_option">
                     <label>Option 3:</label>
-                    <input type="text" id="{{ question_no }}a3" autofocus />
+                    <input type="text" id="q{{ question_no }}a3" autofocus />
                 </div>
                 <div class="question-field__options_option">
                     <label>Option 4:</label>
-                    <input type="text" id="{{ question_no }}a4" autofocus />
+                    <input type="text" id="q{{ question_no }}a4" autofocus />
                 </div>
             </div>
             <div class="question-field__correct-answer">
@@ -92,29 +92,7 @@
                 <h3>Questions</h3>
                 <button onclick="addQuestion()">+ Add</button>
             </div>
-            <div id="all-questions">
-                <!-- <div id="question-field">
-                    <label>Question 1: </label>
-                    <input class = "question" id = "q1" type = "text" autofocus/>
-                    <br>
-                    <br>
-                    <label>Option 1: </label>
-                    <input id = "1a1" type = "text" autofocus/>
-                    <label>Option 2: </label>
-                    <input id = "1a2" type = "text" autofocus/>
-                    <br>
-                    <br>
-                    <label>Option 3: </label>
-                    <input id = "1a3"  type = "text"autofocus/>
-                    <label>Option 4: </label>
-                    <input id = "1a4"  type = "text" autofocus/>
-                    <br>
-                    <br>
-                    <label>Correct Answer (1-4) :</label>
-                    <input class = "correct" id = "correct1"  type = "number" autofocus/>
-                </div> -->
-            </div>
-            
+            <div id="all-questions"></div>
         </div>
 
         <div id="actions">
