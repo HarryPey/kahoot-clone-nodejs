@@ -14,6 +14,7 @@ var server = http.createServer(app);
 var io = socketIO(server);
 var games = new LiveGames();
 var players = new Players();
+var updatePAInterval = null;
 
 //Mongodb setup
 var MongoClient = require('mongodb').MongoClient;
@@ -104,7 +105,7 @@ io.on('connection', (socket) => {
                     var customDuration = res[0].questions[0].customDuration;
                     
                     socket.emit('gameQuestions', {
-                        currentQuestionNo: 0,
+                        currentQuestionNo: 1,
                         totalQuestions: res[0].questions.length,
                         q1: question,
                         a1: answer1,
@@ -269,10 +270,14 @@ io.on('connection', (socket) => {
                         io.to(game.pin).emit('questionOver', playerData, correctAnswer);//Tell everyone that question is over
                     }else{
                         //update host screen of num players answered
-                        io.to(game.pin).emit('updatePlayersAnswered', {
-                            playersInGame: playerNum.length,
-                            playersAnswered: game.gameData.playersAnswered
-                        });
+                        updatePAInterval = setInterval(function(){
+                            playerNum = players.getPlayers(hostId);
+                            game = games.getGame(hostId);
+                            io.to(game.pin).emit('updatePlayersAnswered', {
+                                playersInGame: playerNum.length,
+                                playersAnswered: game.gameData.playersAnswered
+                            });
+                        }, 1000);
                     }
                     
                     db.close();
@@ -300,6 +305,7 @@ io.on('connection', (socket) => {
     
     
     socket.on('timeUp', function(){
+        clearInterval(updatePAInterval);
         var game = games.getGame(socket.id);
         game.gameData.questionLive = false;
         var playerData = players.getPlayers(game.hostId);
@@ -323,6 +329,7 @@ io.on('connection', (socket) => {
     });
     
     socket.on('nextQuestion', function(){
+        clearinterval(updatePAInterval);
         var playerData = players.getPlayers(socket.id);
         //Reset players current answer to 0
         for(var i = 0; i < Object.keys(players.players).length; i++){
@@ -359,7 +366,7 @@ io.on('connection', (socket) => {
                         var customDuration = res[0].questions[questionNum].customDuration;
 
                         socket.emit('gameQuestions', {
-                            currentQuestionNo: questionNum+1,
+                            currentQuestionNo: (questionNum+1),
                             totalQuestions: res[0].questions.length,
                             q1: question,
                             a1: answer1,

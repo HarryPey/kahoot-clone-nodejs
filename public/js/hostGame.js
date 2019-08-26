@@ -18,6 +18,7 @@ function initEl() {
         tplLeaderboard: elId('leaderboard-template'),
         ques: document.getElementsByClassName('ques')[0],
         quesArea: document.getElementsByClassName('ques__content__question-area')[0],
+        qNum: elId('questionNum'),
         question: elId('question'),
         answer: document.getElementsByClassName('answer')[0],
         answer1: elId('answer1'),
@@ -60,6 +61,7 @@ socket.on('noGameFound', function(){
 
 socket.on('gameQuestions', function(data){
     el.ques.classList.remove('ques--over');
+    el.qNum.innerHTML = Mustache.render(el.tplQPos.innerHTML, data);
     el.quesArea.innerHTML = Mustache.render(el.tplQuestion.innerHTML, data);
     el.playersAnswered.innerHTML = Mustache.render(el.tplPlayersAns.innerHTML, {
         playersAnswered: 0,
