@@ -25,11 +25,13 @@ body {
     animation: bgcolor 10s infinite;
     -webkit-animation-direction: alternate;
     animation-direction: alternate;
+    margin: 0;
 }
 #title{
-    font-family: 'Raleway', sans-serif;
+    font-family: 'Pacifico', sans-serif;
+    font-weight: lighter;
     text-align: center;
-    font-size: 50px;
+    font-size: 3.5rem;
     color: white;
 }
 #name{
@@ -64,6 +66,10 @@ body {
     font-size: 25px;
     font-family: 'Raleway', sans-serif;
     color: white;
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s, opacity 1s, height 1s;
+    height: 0px;
 }
 #host{
     color: white;
@@ -87,4 +93,38 @@ body {
     font-size: 20px;
     background-color: #3A3B3A;
     font-family: 'Raleway', sans-serif;
+}
+
+#flex-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+}
+
+#login-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#login-wrapper h1{
+    margin-top: 0;
+}
+
+#login-wrapper input, #login-wrapper button{
+    opacity: 0.8;
+    width: 300px;
+}
+
+#label.show {
+    visibility: visible;
+    opacity: 1;
+    height: 25px;
+}
+
+#error {
+    display: none;
 }

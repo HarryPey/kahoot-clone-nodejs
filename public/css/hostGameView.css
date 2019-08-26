@@ -1,35 +1,50 @@
-#answer1{
-    background-color: #4CAF50;
-    margin: auto;
-    padding: 30px 20px;
-    height: 50%;
-    font-family: 'Raleway', sans-serif;
-    font-size: 20px;
+body{margin: 0}
+h1, .answer, .winner, #question, #timerText, #winnerTitle{ font-family: 'Raleway', sans-serif }
+#playersAnswered, #num, #questionNum{ font-family: 'Tajawal', sans-serif }
+
+#page-title {
+    font-size: 2rem;
+    margin: 15px 0;
+    text-align: center;
 }
-#answer2{
-    background-color: #f94a1e;
-    margin: auto;
-    padding: 30px 20px;
-    height: 50%;
-    font-family: 'Raleway', sans-serif;
-    font-size: 20px;
+
+#page-title > span {
+    animation: colorAnimate 10s infinite;
 }
-#answer3{
-    background-color: #3399ff;
-    margin: auto;
-    padding: 30px 20px;
-    height: 50%;
-    font-family: 'Raleway', sans-serif;
-    font-size: 20px;
+
+.answer{
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    height: 100%;
+    width: 100%;
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-shadow: 0 0 5px #ffffff;
+    margin: 0;
+    min-height: 10vh;
 }
-#answer4{
-    background-color: #ff9933;
-    margin: auto;
-    padding: 30px 20px;
-    height: 50%;
-    font-family: 'Raleway', sans-serif;
-    font-size: 20px;
+
+.answer > span{
+    margin: 20px;
 }
+
+#question{
+    grid-area: question;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+#question > span {
+    margin: 10px;
+}
+
+#answer1{ background-color: #5ac55d; grid-area: answer1; }
+#answer2{ background-color: #ff5329; grid-area: answer2; }
+#answer3{ background-color: #4aa3fc; grid-area: answer3; }
+#answer4{ background-color: #ff9933; grid-area: answer4; }
+
 .square{
     border: none;
     padding: 15px 32px;
@@ -43,71 +58,139 @@
     font-size: 20px;
 }
 
-#square1{
-    background-color: #4CAF50;
-}
-#square2{
-    background-color: #f94a1e;
-}
-#square3{
-    background-color: #3399ff;
-}
-#square4{
-    background-color: #ff9933;
+#square1{ background-color: #4CAF50; }
+#square2{ background-color: #f94a1e; }
+#square3{ background-color: #3399ff; }
+#square4{ background-color: #ff9933; }
+
+#nextQButton{ margin-top: 20px;display: none; }
+
+.winner{
+    text-align: center;
+    display: none;
 }
 
-#nextQButton{
-    display: none;
-}
-#question{
-    font-family: 'Raleway', sans-serif;
-}
-#timerText{
-    font-family: 'Raleway', sans-serif;
-}
-#num{
-    font-family: 'Tajawal', sans-serif;
-    font-size: 35px;
-}
-#playersAnswered{
-    font-family: 'Tajawal', sans-serif;
-}
-#questionNum{
-    font-family: 'Tajawal', sans-serif;
-}
+#winner1{ font-size: 30px; }
+#winner2{ font-size: 22px; }
+#winner3{ font-size: 20px; }
 
-#winner1{
-    font-family: 'Raleway', sans-serif;
-    text-align: center;
-    font-size: 30px;
-    display: none;
-}
-#winner2{
-    font-family: 'Raleway', sans-serif;
-    text-align: center;
-    font-size: 22px;
-    display: none;
-}
-#winner3{
-    font-family: 'Raleway', sans-serif;
-    text-align: center;
-    font-size: 20px;
-    display: none;
-}
-#winner4{
-    font-family: 'Raleway', sans-serif;
-    text-align: center;
-    display: none;
-}
-#winner5{
-    font-family: 'Raleway', sans-serif;
-    text-align: center;
-    display: none;
-}
 #winnerTitle{
     text-align: center;
-    font-family: 'Raleway', sans-serif;
     font-size: 35px;
     color: #3399ff;
     display: none;
 }
+
+.ques__other-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+.ques__other-details > * {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 1rem 0;
+    font-size: 1.5rem;
+}
+
+.ques__content {
+    display: flex;
+    align-items: center;
+    min-height: calc(100vh - 8rem - 30px);
+}
+
+.ques__content__question-area {
+    min-height: 50vh;
+    width: 100vw;
+    display: grid;
+    gap: 2px;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+        'question question'
+        'answer1 answer2'
+        'answer3 answer4';
+}
+
+.ques {
+    width: 100vw;
+}
+
+.ques.ques--over {
+    display: grid;
+    width: 60vw;
+    grid-template-columns: 6fr 4fr;
+    grid-template-areas:
+        'ques-details ques-leaderboard'
+        'ques-chart ques-leaderboard'
+        'ques-content ques-leaderboard'
+}
+
+.ques.ques--over #nextQButton {
+    display: block;
+}
+
+.ques.ques--over .ques__other-details {
+    grid-area: ques-details;
+}
+
+.ques.ques--over .ques__chart {
+    grid-area: ques-chart;
+}
+
+.ques.ques--over .ques__content {
+    grid-area: ques-content;
+}
+
+.ques.ques--over .ques__content .ques__content__question-area{
+    width: 60vw;
+}
+
+.ques__leaderboard {
+    display: none;
+}
+
+.ques.ques--over .ques__leaderboard {
+    display: block;
+    grid-area: ques-leaderboard;
+    width: 40vw;
+}
+
+.ques.ques--over .ques__leaderboard table{
+    width: 40vw;
+    font-size: 1.5rem;
+    font-family: 'Raleway', open-sans;
+}
+.ques.ques--over .ques__leaderboard table td{
+    text-align: center;
+}
+
+.ques__leaderboard__title{
+    text-align: center;
+}
+
+.ques.ques--over .ques__content {
+    min-height: inherit;
+    height: inherit;
+    align-items: flex-end;
+}
+
+.ques.ques--over #question {
+    font-size: 1.5rem;
+}
+
+.ques.ques--over .ques__content__question-area {
+    gap: 0px;
+    min-height: 25vh;
+}
+
+.ct-series-a .ct-bar { stroke-width: 12.5vw }
+.ct-series-a .ct-bar:nth-of-type(1) { stroke: #4CAF50 }
+.ct-series-a .ct-bar:nth-of-type(2) { stroke: #f94a1e }
+.ct-series-a .ct-bar:nth-of-type(3) { stroke: #3399ff }
+.ct-series-a .ct-bar:nth-of-type(4) { stroke: #ff9933 }
+span.ct-label.ct-vertical.ct-start {
+    color: #000000;
+}
+
+@keyframes colorAnimate { 0% { color: #45a3e5 } 30% { color: #66bf39 } 60% { color: #eb670f } 90% { color: #f35 } 100% { color: #864cbf } }

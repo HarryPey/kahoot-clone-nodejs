@@ -1,165 +1,186 @@
 var socket = io();
-
 var params = jQuery.deparam(window.location.search); //Gets the id from url
-
 var timer;
+var DEFAULT_TIME = 20;
+var time = DEFAULT_TIME;
+var chart = null;
 
-var time = 20;
+function elId(id){return document.getElementById(id);}
+
+var el = {};
+
+function initEl() {
+    el = {
+        tplQuestion: elId('question-template'),
+        tplQPos: elId('question-pos-template'),
+        tplPlayersAns: elId('players-answered-template'),
+        tplTimeLeft: elId('time-left-template'),
+        tplLeaderboard: elId('leaderboard-template'),
+        ques: document.getElementsByClassName('ques')[0],
+        quesArea: document.getElementsByClassName('ques__content__question-area')[0],
+        qNum: elId('questionNum'),
+        question: elId('question'),
+        answer: document.getElementsByClassName('answer')[0],
+        answer1: elId('answer1'),
+        answer2: elId('answer2'),
+        answer3: elId('answer3'),
+        answer4: elId('answer4'),
+        playersAnswered: elId('playersAnswered'),
+        timerText: elId('timerText'),
+        square: document.getElementsByClassName('square')[0],
+        square1: elId('square1'),
+        square2: elId('square2'),
+        square3: elId('square3'),
+        square4: elId('square4'),
+        nextQButton: elId('nextQButton'),
+        winner: document.getElementsByClassName('winner')[0],
+        winner1: elId('winner1'),
+        winner2: elId('winner2'),
+        winner3: elId('winner3'),
+        winner4: elId('winner4'),
+        winner5: elId('winner5'),
+        winnerTitle: elId('winnerTitle'),
+        leaderboard: document.getElementsByClassName('ques__leaderboard')[0],
+        chart: document.getElementsByClassName('ques__chart')[0],
+    };
+}
+
+initEl();
 
 //When host connects to server
 socket.on('connect', function() {
+    console.log('connecting to the server!')
     
     //Tell server that it is host connection from game view
     socket.emit('host-join-game', params);
 });
 
 socket.on('noGameFound', function(){
-   window.location.href = '../../';//Redirect user to 'join game' page
+   window.location.href = '/';//Redirect user to 'join game' page
 });
 
 socket.on('gameQuestions', function(data){
-    document.getElementById('question').innerHTML = data.q1;
-    document.getElementById('answer1').innerHTML = data.a1;
-    document.getElementById('answer2').innerHTML = data.a2;
-    document.getElementById('answer3').innerHTML = data.a3;
-    document.getElementById('answer4').innerHTML = data.a4;
-    var correctAnswer = data.correct;
-    document.getElementById('playersAnswered').innerHTML = "Players Answered 0 / " + data.playersInGame;
-    updateTimer();
+    el.ques.classList.remove('ques--over');
+    el.qNum.innerHTML = Mustache.render(el.tplQPos.innerHTML, data);
+    el.quesArea.innerHTML = Mustache.render(el.tplQuestion.innerHTML, data);
+    el.playersAnswered.innerHTML = Mustache.render(el.tplPlayersAns.innerHTML, {
+        playersAnswered: 0,
+        playersInGame: data.playersInGame,
+    });
+
+
+    initEl();
+    updateTimer(data.cd);
 });
 
 socket.on('updatePlayersAnswered', function(data){
-   document.getElementById('playersAnswered').innerHTML = "Players Answered " + data.playersAnswered + " / " + data.playersInGame; 
+    playersInGame = data.playersInGame;
+    el.playersAnswered.innerHTML = Mustache.render(el.tplPlayersAns.innerHTML, data);
 });
 
 socket.on('questionOver', function(playerData, correct){
     clearInterval(timer);
-    var answer1 = 0;
-    var answer2 = 0;
-    var answer3 = 0;
-    var answer4 = 0;
-    var total = 0;
-    //Hide elements on page
-    document.getElementById('playersAnswered').style.display = "none";
-    document.getElementById('timerText').style.display = "none";
+    el.nextQButton.style.display = 'block';
+    el.ques.classList.add('ques--over');
+    var answer = [0, 0, 0, 0];
+
+    el.answer.classList.add('incorrect');
     
     //Shows user correct answer with effects on elements
-    if(correct == 1){
-        document.getElementById('answer2').style.filter = "grayscale(50%)";
-        document.getElementById('answer3').style.filter = "grayscale(50%)";
-        document.getElementById('answer4').style.filter = "grayscale(50%)";
-        var current = document.getElementById('answer1').innerHTML;
-        document.getElementById('answer1').innerHTML = "&#10004" + " " + current;
-    }else if(correct == 2){
-        document.getElementById('answer1').style.filter = "grayscale(50%)";
-        document.getElementById('answer3').style.filter = "grayscale(50%)";
-        document.getElementById('answer4').style.filter = "grayscale(50%)";
-        var current = document.getElementById('answer2').innerHTML;
-        document.getElementById('answer2').innerHTML = "&#10004" + " " + current;
-    }else if(correct == 3){
-        document.getElementById('answer1').style.filter = "grayscale(50%)";
-        document.getElementById('answer2').style.filter = "grayscale(50%)";
-        document.getElementById('answer4').style.filter = "grayscale(50%)";
-        var current = document.getElementById('answer3').innerHTML;
-        document.getElementById('answer3').innerHTML = "&#10004" + " " + current;
-    }else if(correct == 4){
-        document.getElementById('answer1').style.filter = "grayscale(50%)";
-        document.getElementById('answer2').style.filter = "grayscale(50%)";
-        document.getElementById('answer3').style.filter = "grayscale(50%)";
-        var current = document.getElementById('answer4').innerHTML;
-        document.getElementById('answer4').innerHTML = "&#10004" + " " + current;
+    var t = '&#10004 ';
+    switch(correct){
+        case 1:
+            el.answer1.classList.remove('incorrect');
+            el.answer1.innerHTML = t + el.answer1.innerHTML;
+            break;
+        case 2:
+            el.answer2.classList.remove('incorrect');
+            el.answer2.innerHTML = t + el.answer2.innerHTML;
+            break;
+        case 3:
+            el.answer3.classList.remove('incorrect');
+            el.answer3.innerHTML = t + el.answer3.innerHTML;
+            break;
+        case 4:
+            el.answer4.classList.remove('incorrect');
+            el.answer4.innerHTML = t + el.answer4.innerHTML;
+            break;
     }
     
     for(var i = 0; i < playerData.length; i++){
-        if(playerData[i].gameData.answer == 1){
-            answer1 += 1;
-        }else if(playerData[i].gameData.answer == 2){
-            answer2 += 1;
-        }else if(playerData[i].gameData.answer == 3){
-            answer3 += 1;
-        }else if(playerData[i].gameData.answer == 4){
-            answer4 += 1;
-        }
-        total += 1;
+        ++answer[playerData[i].gameData.answer-1];
     }
     
-    //Gets values for graph
-    answer1 = answer1 / total * 100;
-    answer2 = answer2 / total * 100;
-    answer3 = answer3 / total * 100;
-    answer4 = answer4 / total * 100;
+    chart = new Chartist.Bar('.ques__chart', {
+        series: [answer]
+    });
     
-    document.getElementById('square1').style.display = "inline-block";
-    document.getElementById('square2').style.display = "inline-block";
-    document.getElementById('square3').style.display = "inline-block";
-    document.getElementById('square4').style.display = "inline-block";
-    
-    document.getElementById('square1').style.height = answer1 + "px";
-    document.getElementById('square2').style.height = answer2 + "px";
-    document.getElementById('square3').style.height = answer3 + "px";
-    document.getElementById('square4').style.height = answer4 + "px";
-    
-    document.getElementById('nextQButton').style.display = "block";
-    
+    var leadersPlayers = playerData.sort(function(a, b){
+        return b.gameData.score - a.gameData.score;
+    });
+
+    if(leadersPlayers.length > 10){
+        leadersPlayers = leadersPlayers.slice(0, 10);
+    }
+
+    var plyr = null;
+    var leaders = [];
+
+    for(var i=0; i<leadersPlayers.length; ++i) {
+        plyr = {
+            rank: i+1,
+            name: leadersPlayers[i].name,
+            score: leadersPlayers[i].gameData.score,
+        };
+
+        leaders.push(plyr);
+    }
+
+    el.leaderboard.innerHTML = Mustache.render(el.tplLeaderboard.innerHTML, {
+        players: leaders
+    });
 });
 
 function nextQuestion(){
-    document.getElementById('nextQButton').style.display = "none";
-    document.getElementById('square1').style.display = "none";
-    document.getElementById('square2').style.display = "none";
-    document.getElementById('square3').style.display = "none";
-    document.getElementById('square4').style.display = "none";
+    el.nextQButton.style.display = "none";
+    el.chart.innerHTML = '';
+    el.answer.classList.remove('incorrect');
     
-    document.getElementById('answer1').style.filter = "none";
-    document.getElementById('answer2').style.filter = "none";
-    document.getElementById('answer3').style.filter = "none";
-    document.getElementById('answer4').style.filter = "none";
-    
-    document.getElementById('playersAnswered').style.display = "block";
-    document.getElementById('timerText').style.display = "block";
-    document.getElementById('num').innerHTML = " 20";
+    el.playersAnswered.style.display = "block";
     socket.emit('nextQuestion'); //Tell server to start new question
 }
 
-function updateTimer(){
-    time = 20;
+function updateTimer(cd){
+    time = DEFAULT_TIME;
+
+    if(cd != null && cd != undefined && typeof cd == 'number') {
+        time = cd;
+    }
+
     timer = setInterval(function(){
-        time -= 1;
-        document.getElementById('num').textContent = " " + time;
+        --time;
+        el.timerText.innerHTML = Mustache.render(el.tplTimeLeft.innerHTML, {time: time});
         if(time == 0){
             socket.emit('timeUp');
+            clearTimeout(timer);
         }
     }, 1000);
 }
 socket.on('GameOver', function(data){
-    document.getElementById('nextQButton').style.display = "none";
-    document.getElementById('square1').style.display = "none";
-    document.getElementById('square2').style.display = "none";
-    document.getElementById('square3').style.display = "none";
-    document.getElementById('square4').style.display = "none";
+    initEl();
+    el.nextQButton.style.display = "none";
     
-    document.getElementById('answer1').style.display = "none";
-    document.getElementById('answer2').style.display = "none";
-    document.getElementById('answer3').style.display = "none";
-    document.getElementById('answer4').style.display = "none";
-    document.getElementById('timerText').innerHTML = "";
-    document.getElementById('question').innerHTML = "GAME OVER";
-    document.getElementById('playersAnswered').innerHTML = "";
+    el.question.innerHTML = "GAME OVER";
+    el.ques.style.display = 'none';
     
+    el.winner.style.display = 'block';
+    el.winnerTitle.style.display = "block";
     
-    
-    document.getElementById('winner1').style.display = "block";
-    document.getElementById('winner2').style.display = "block";
-    document.getElementById('winner3').style.display = "block";
-    document.getElementById('winner4').style.display = "block";
-    document.getElementById('winner5').style.display = "block";
-    document.getElementById('winnerTitle').style.display = "block";
-    
-    document.getElementById('winner1').innerHTML = "1. " + data.num1;
-    document.getElementById('winner2').innerHTML = "2. " + data.num2;
-    document.getElementById('winner3').innerHTML = "3. " + data.num3;
-    document.getElementById('winner4').innerHTML = "4. " + data.num4; 
-    document.getElementById('winner5').innerHTML = "5. " + data.num5;
+    el.winner1.innerHTML = "1. " + data.num1;
+    el.winner2.innerHTML = "2. " + data.num2;
+    el.winner3.innerHTML = "3. " + data.num3;
+    el.winner4.innerHTML = "4. " + data.num4; 
+    el.winner5.innerHTML = "5. " + data.num5;
 });
 
 

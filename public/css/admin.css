@@ -1,0 +1,35 @@
+h1,h2{font-family: 'Raleway', sans-serif}
+
+h1.page-title{
+    text-align: center;
+    margin-bottom: 0;
+}
+
+h2.admin__content__title{
+    text-align: center;
+    margin: 10px 0;
+}
+
+.admin__content__container__login{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: 'Raleway', sans-serif;
+}
+.admin__content__container__login > * {
+    margin: 5px 0;
+}
+
+.admin__content__container__login__validation-message{
+    display: none;
+}
+
+#username, #password {
+    border: 1px solid #444444;
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+#username.invalid, #password.invalid {
+    border-color: #ff0000;
+}
