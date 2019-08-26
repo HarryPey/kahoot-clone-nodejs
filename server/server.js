@@ -105,6 +105,7 @@ io.on('connection', (socket) => {
                     var customDuration = res[0].questions[0].customDuration;
                     
                     socket.emit('gameQuestions', {
+                        quizName: res[0].name,
                         currentQuestionNo: 1,
                         totalQuestions: res[0].questions.length,
                         q1: question,
@@ -241,6 +242,7 @@ io.on('connection', (socket) => {
         var hostId = player.hostId;
         var playerNum = players.getPlayers(hostId);
         var game = games.getGame(hostId);
+
         if(game.gameData.questionLive == true){//if the question is still live
             player.gameData.answer = num;
             game.gameData.playersAnswered += 1;
@@ -263,16 +265,19 @@ io.on('connection', (socket) => {
                         socket.emit('answerResult', true);
                     }
 
-                    //Checks if all players answered
+                    // Checks if all players answered
                     if(game.gameData.playersAnswered == playerNum.length){
-                        game.gameData.questionLive = false; //Question has been ended bc players all answered under time
+                        game.gameData.questionLive = false; // Question has been ended bc players all answered under time
                         var playerData = players.getPlayers(game.hostId);
-                        io.to(game.pin).emit('questionOver', playerData, correctAnswer);//Tell everyone that question is over
+
+                        setTimeout(function(){
+                            io.to(game.pin).emit('questionOver', playerData, correctAnswer);
+                        }, 128);
                     }else{
                         //update host screen of num players answered
                         updatePAInterval = setInterval(function(){
-                            playerNum = players.getPlayers(hostId);
-                            game = games.getGame(hostId);
+                            // playerNum = players.getPlayers(hostId);
+                            // game = games.getGame(hostId);
                             io.to(game.pin).emit('updatePlayersAnswered', {
                                 playersInGame: playerNum.length,
                                 playersAnswered: game.gameData.playersAnswered
@@ -283,9 +288,6 @@ io.on('connection', (socket) => {
                     db.close();
                 });
             });
-            
-            
-            
         }
     });
     
@@ -295,14 +297,10 @@ io.on('connection', (socket) => {
     });
     
     socket.on('time', function(data){
-        var time = data.time / 20;
-        time = time * 100;
-        var playerid = data.player;
-        var player = players.getPlayer(playerid);
-        player.gameData.score += time;
+        var player = players.getPlayer(data.player);
+        player.gameData.score += data.time * 5;
+        console.log('Player: ' + player.name + ', score: ' + player.gameData.score);
     });
-    
-    
     
     socket.on('timeUp', function(){
         clearInterval(updatePAInterval);
@@ -329,7 +327,7 @@ io.on('connection', (socket) => {
     });
     
     socket.on('nextQuestion', function(){
-        clearinterval(updatePAInterval);
+        clearInterval(updatePAInterval);
         var playerData = players.getPlayers(socket.id);
         //Reset players current answer to 0
         for(var i = 0; i < Object.keys(players.players).length; i++){
@@ -366,6 +364,7 @@ io.on('connection', (socket) => {
                         var customDuration = res[0].questions[questionNum].customDuration;
 
                         socket.emit('gameQuestions', {
+                            quizName: res[0].name,
                             currentQuestionNo: (questionNum+1),
                             totalQuestions: res[0].questions.length,
                             q1: question,
@@ -386,76 +385,26 @@ io.on('connection', (socket) => {
                         var fourth = {name: "", score: 0};
                         var fifth = {name: "", score: 0};
                         
-                        for(var i = 0; i < playersInGame.length; i++){
-                            console.log(playersInGame[i].gameData.score);
-                            if(playersInGame[i].gameData.score > fifth.score){
-                                if(playersInGame[i].gameData.score > fourth.score){
-                                    if(playersInGame[i].gameData.score > third.score){
-                                        if(playersInGame[i].gameData.score > second.score){
-                                            if(playersInGame[i].gameData.score > first.score){
-                                                //First Place
-                                                fifth.name = fourth.name;
-                                                fifth.score = fourth.score;
-                                                
-                                                fourth.name = third.name;
-                                                fourth.score = third.score;
-                                                
-                                                third.name = second.name;
-                                                third.score = second.score;
-                                                
-                                                second.name = first.name;
-                                                second.score = first.score;
-                                                
-                                                first.name = playersInGame[i].name;
-                                                first.score = playersInGame[i].gameData.score;
-                                            }else{
-                                                //Second Place
-                                                fifth.name = fourth.name;
-                                                fifth.score = fourth.score;
-                                                
-                                                fourth.name = third.name;
-                                                fourth.score = third.score;
-                                                
-                                                third.name = second.name;
-                                                third.score = second.score;
-                                                
-                                                second.name = playersInGame[i].name;
-                                                second.score = playersInGame[i].gameData.score;
-                                            }
-                                        }else{
-                                            //Third Place
-                                            fifth.name = fourth.name;
-                                            fifth.score = fourth.score;
-                                                
-                                            fourth.name = third.name;
-                                            fourth.score = third.score;
-                                            
-                                            third.name = playersInGame[i].name;
-                                            third.score = playersInGame[i].gameData.score;
-                                        }
-                                    }else{
-                                        //Fourth Place
-                                        fifth.name = fourth.name;
-                                        fifth.score = fourth.score;
-                                        
-                                        fourth.name = playersInGame[i].name;
-                                        fourth.score = playersInGame[i].gameData.score;
-                                    }
-                                }else{
-                                    //Fifth Place
-                                    fifth.name = playersInGame[i].name;
-                                    fifth.score = playersInGame[i].gameData.score;
-                                }
-                            }
+                        playersInGame.sort(function(a, b){
+                            return b.gameData.score - a.gameData.score;
+                        });
+
+                        var topScores = [];
+                        
+                        var len = 5;
+
+                        if (playersInGame.length < 5) {
+                            len = playersInGame.length;
+                        }
+
+                        for(var i=0; i<len; ++i){
+                            topScores.push(
+                                playersInGame[i].name +
+                                '(' + playersInGame[i].gameData.score + ')'
+                            );
                         }
                         
-                        io.to(game.pin).emit('GameOver', {
-                            num1: first.name + ' (' + first.score + ')',
-                            num2: second.name + ' (' + second.score + ')',
-                            num3: third.name + ' (' + third.score + ')',
-                            num4: fourth.name + ' (' + fourth.score + ')',
-                            num5: fifth.name + ' (' + fifth.score + ')',
-                        });
+                        io.to(game.pin).emit('GameOver', { topScores: topScores });
                     }
                 });
             });
@@ -508,56 +457,6 @@ io.on('connection', (socket) => {
                 db.close();
                 socket.emit('gameSaved', num);
             });
-            
         });
-        
-        
     });
-    
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

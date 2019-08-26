@@ -8,9 +8,7 @@ h1, .answer, .winner, #question, #timerText, #winnerTitle{ font-family: 'Raleway
     text-align: center;
 }
 
-#page-title > span {
-    animation: colorAnimate 10s infinite;
-}
+#page-title > span { animation: colorAnimate 10s infinite; }
 
 .answer{
     display: flex;
@@ -25,9 +23,7 @@ h1, .answer, .winner, #question, #timerText, #winnerTitle{ font-family: 'Raleway
     min-height: 10vh;
 }
 
-.answer > span{
-    margin: 20px;
-}
+.answer > span{ margin: 20px; }
 
 #question{
     grid-area: question;
@@ -36,14 +32,16 @@ h1, .answer, .winner, #question, #timerText, #winnerTitle{ font-family: 'Raleway
     align-items: center;
 }
 
-#question > span {
-    margin: 10px;
-}
+#question > span { margin: 10px; }
 
 #answer1{ background-color: #5ac55d; grid-area: answer1; }
 #answer2{ background-color: #ff5329; grid-area: answer2; }
 #answer3{ background-color: #4aa3fc; grid-area: answer3; }
 #answer4{ background-color: #ff9933; grid-area: answer4; }
+
+#answer1.incorrect, #answer2.incorrect, #answer3.incorrect, #answer4.incorrect {
+    background-color: #aaaaaa;
+}
 
 .square{
     border: none;
@@ -65,11 +63,7 @@ h1, .answer, .winner, #question, #timerText, #winnerTitle{ font-family: 'Raleway
 
 #nextQButton{ margin-top: 20px;display: none; }
 
-.winner{
-    text-align: center;
-    display: none;
-}
-
+.winner{ text-align: center; }
 #winner1{ font-size: 30px; }
 #winner2{ font-size: 22px; }
 #winner3{ font-size: 20px; }
@@ -78,7 +72,6 @@ h1, .answer, .winner, #question, #timerText, #winnerTitle{ font-family: 'Raleway
     text-align: center;
     font-size: 35px;
     color: #3399ff;
-    display: none;
 }
 
 .ques__other-details {
@@ -112,9 +105,7 @@ h1, .answer, .winner, #question, #timerText, #winnerTitle{ font-family: 'Raleway
         'answer3 answer4';
 }
 
-.ques {
-    width: 100vw;
-}
+.ques { width: 100vw; }
 
 .ques.ques--over {
     display: grid;
@@ -126,29 +117,12 @@ h1, .answer, .winner, #question, #timerText, #winnerTitle{ font-family: 'Raleway
         'ques-content ques-leaderboard'
 }
 
-.ques.ques--over #nextQButton {
-    display: block;
-}
-
-.ques.ques--over .ques__other-details {
-    grid-area: ques-details;
-}
-
-.ques.ques--over .ques__chart {
-    grid-area: ques-chart;
-}
-
-.ques.ques--over .ques__content {
-    grid-area: ques-content;
-}
-
-.ques.ques--over .ques__content .ques__content__question-area{
-    width: 60vw;
-}
-
-.ques__leaderboard {
-    display: none;
-}
+.ques.ques--over #nextQButton { display: block; }
+.ques.ques--over .ques__other-details { grid-area: ques-details; }
+.ques.ques--over .ques__chart { grid-area: ques-chart; }
+.ques.ques--over .ques__content { grid-area: ques-content; }
+.ques.ques--over .ques__content .ques__content__question-area{ width: 60vw; }
+.ques__leaderboard { display: none; }
 
 .ques.ques--over .ques__leaderboard {
     display: block;
@@ -161,13 +135,10 @@ h1, .answer, .winner, #question, #timerText, #winnerTitle{ font-family: 'Raleway
     font-size: 1.5rem;
     font-family: 'Raleway', open-sans;
 }
-.ques.ques--over .ques__leaderboard table td{
-    text-align: center;
-}
 
-.ques__leaderboard__title{
-    text-align: center;
-}
+.ques.ques--over .ques__leaderboard table td{ text-align: center; }
+.ques__leaderboard__title{ text-align: center; }
+.ques__leaderboard__title{ border-top: #444444 1px solid; }
 
 .ques.ques--over .ques__content {
     min-height: inherit;
@@ -175,13 +146,31 @@ h1, .answer, .winner, #question, #timerText, #winnerTitle{ font-family: 'Raleway
     align-items: flex-end;
 }
 
-.ques.ques--over #question {
-    font-size: 1.5rem;
-}
+.ques.ques--over #question { font-size: 1.5rem; }
 
 .ques.ques--over .ques__content__question-area {
     gap: 0px;
     min-height: 25vh;
+}
+
+#time-over-overlay {
+    display: none;
+    justify-content: center;
+    align-content: center;
+
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    background: #f94a1e;
+    opacity: 1;
+    transition: 2s opacity linear;
+}
+
+#time-over-text {
+    font-size: 20vh;
+    color: #ffffff;
 }
 
 .ct-series-a .ct-bar { stroke-width: 12.5vw }
@@ -189,8 +178,6 @@ h1, .answer, .winner, #question, #timerText, #winnerTitle{ font-family: 'Raleway
 .ct-series-a .ct-bar:nth-of-type(2) { stroke: #f94a1e }
 .ct-series-a .ct-bar:nth-of-type(3) { stroke: #3399ff }
 .ct-series-a .ct-bar:nth-of-type(4) { stroke: #ff9933 }
-span.ct-label.ct-vertical.ct-start {
-    color: #000000;
-}
+span.ct-label.ct-vertical.ct-start { color: #000000; }
 
 @keyframes colorAnimate { 0% { color: #45a3e5 } 30% { color: #66bf39 } 60% { color: #eb670f } 90% { color: #f35 } 100% { color: #864cbf } }

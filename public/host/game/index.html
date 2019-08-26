@@ -11,7 +11,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.2/mustache.min.js"></script>
 
         <script id="page-title-template" type="x-tmpl-mustache">
-            KwizzMania<!--: <span>{{ quizName }}</span>-->
+            KwizzMania: <span>{{ quizName }}</span>
         </script>
         
         <script id="question-pos-template" type="x-tmpl-mustache">
@@ -45,9 +45,16 @@
                 </tbody>
             </table>
         </script>
+
+        <script id="winners-template" type="x-tmpl-mustache">
+            <h2 id="winnerTitle">Top {{ no }} Players</h4>
+            {{ #players }}
+                <h3 class="winner" id="winner{{ i }}">{{ i }}. {{ name }}</h3>
+            {{ /players }}
+        </script>
     </head>
     <body>
-        <h1 id="page-title">KwizzMania<!--: <span>Independence Day Quiz</span>--></h1>
+        <h1 id="page-title">KwizzMania</h1>
 
         <div class="ques">
             <div class="ques__other-details">
@@ -66,13 +73,8 @@
         </div>
         <button onclick="nextQuestion()" id="nextQButton">Next Question</button>
 
-        <h2 id="winnerTitle">Top 5 Players</h4>
-        <h3 class="winner" id="winner1">1.</h3>
-        <h3 class="winner" id="winner2">2.</h3>
-        <h3 class="winner" id="winner3">3.</h3>
-        <h3 class="winner" id="winner4">4.</h3>
-        <h3 class="winner" id="winner5">5.</h3>
-            
+        <div id="winner-section"></div>
+
         <script src = "../../socket.io/socket.io.js"></script>
         <script src = "../../js/libs/deparam.js"></script>
         <script src = "../../js/hostGame.js"></script>
