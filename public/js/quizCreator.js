@@ -38,7 +38,7 @@ function getQuestion(qNo) {
     var preSel = 'q' + qNo;
 
     if(document.querySelector('#question-'+qNo+' .question-field__custom-duration__question').value == 'yes'){
-        cd = document.querySelector('#cd'+qNo).value;
+        cd = parseInt(document.querySelector('#cd'+qNo).value);
     }
 
     return {
@@ -54,99 +54,50 @@ function getQuestion(qNo) {
     };
 }
 
-function updateDatabase(){
-    // var questions = [];
-    var name = document.getElementById('name').value;
-    // for(var i = 1; i <= questionNum; i++){
-        // var question = document.getElementById('q' + i).value;
-        // var answer1 = document.getElementById(i + 'a1').value;
-        // var answer2 = document.getElementById(i + 'a2').value;
-        // var answer3 = document.getElementById(i + 'a3').value;
-        // var answer4 = document.getElementById(i + 'a4').value;
-        // var correct = document.getElementById('correct' + i).value;
-        // var answers = [answer1, answer2, answer3, answer4];
-        // questions.push({"question": question, "answers": answers, "correct": correct})
-    //     questions.push(getQuestion(i));
-    // }
-    
-    // var quiz = {id: 0, "name": name, "questions": questions};
-    var quiz = {id: 0, "name": name, "questions": getAllQuestions()};
-    socket.emit('newQuiz', quiz);
+function validateQuiz(quiz) {
+    var errorMsg = '';
+    var errors = false;
+    if (quiz.name == null || quiz.name == undefined || quiz.name == '') {
+        errors = true;
+        errorMsg += 'Quiz name cannot be empty!\n';
+    }
+
+    for(var i=0; i<quiz.questions.length; ++i){
+        if (quiz.questions[i].question == null ||
+                quiz.questions[i].question == undefined ||
+                quiz.questions[i].question == '') {
+            errors = true;
+            errorMsg += 'Question cannot be empty! (in q'+(i+1)+')\n';
+        }
+
+        if (quiz.questions[i].answers[0] == null ||
+                quiz.questions[i].answers[0] == undefined ||
+                quiz.questions[i].answers[0] == '') {
+            errors = true;
+            errorMsg += 'Please input atleast 2 options! (in q'+(i+1)+'a1)\n';
+        }
+
+        if (quiz.questions[i].answers[1] == null ||
+                quiz.questions[i].answers[1] == undefined ||
+                quiz.questions[i].answers[1] == '') {
+                    errors = true;
+            errorMsg += 'Please input atleast 2 options! (in q'+(i+1)+'a2)\n';
+        }    }
+
+    if(errors) {
+        alert(errorMsg);
+    }
 }
 
-// function addQuestion(){
-//     questionNum += 1;
-    
-//     var questionsDiv = document.getElementById('allQuestions');
-    
-//     var newQuestionDiv = document.createElement("div");
-    
-//     var questionLabel = document.createElement('label');
-//     var questionField = document.createElement('input');
-    
-//     var answer1Label = document.createElement('label');
-//     var answer1Field = document.createElement('input');
-    
-//     var answer2Label = document.createElement('label');
-//     var answer2Field = document.createElement('input');
-    
-//     var answer3Label = document.createElement('label');
-//     var answer3Field = document.createElement('input');
-    
-//     var answer4Label = document.createElement('label');
-//     var answer4Field = document.createElement('input');
-    
-//     var correctLabel = document.createElement('label');
-//     var correctField = document.createElement('input');
-    
-//     questionLabel.innerHTML = "Question " + String(questionNum) + ": ";
-//     questionField.setAttribute('class', 'question');
-//     questionField.setAttribute('id', 'q' + String(questionNum));
-//     questionField.setAttribute('type', 'text');
-    
-//     answer1Label.innerHTML = "Answer 1: ";
-//     answer2Label.innerHTML = " Answer 2: ";
-//     answer3Label.innerHTML = "Answer 3: ";
-//     answer4Label.innerHTML = " Answer 4: ";
-//     correctLabel.innerHTML = "Correct Answer (1-4): ";
-    
-//     answer1Field.setAttribute('id', String(questionNum) + "a1");
-//     answer1Field.setAttribute('type', 'text');
-//     answer2Field.setAttribute('id', String(questionNum) + "a2");
-//     answer2Field.setAttribute('type', 'text');
-//     answer3Field.setAttribute('id', String(questionNum) + "a3");
-//     answer3Field.setAttribute('type', 'text');
-//     answer4Field.setAttribute('id', String(questionNum) + "a4");
-//     answer4Field.setAttribute('type', 'text');
-//     correctField.setAttribute('id', 'correct' + String(questionNum));
-//     correctField.setAttribute('type', 'number');
-    
-//     // newQuestionDiv.setAttribute('id', 'question-field');//Sets class of div
-    
-//     newQuestionDiv.appendChild(questionLabel);
-//     newQuestionDiv.appendChild(questionField);
-//     newQuestionDiv.appendChild(document.createElement('br'));
-//     newQuestionDiv.appendChild(document.createElement('br'));
-//     newQuestionDiv.appendChild(answer1Label);
-//     newQuestionDiv.appendChild(answer1Field);
-//     newQuestionDiv.appendChild(answer2Label);
-//     newQuestionDiv.appendChild(answer2Field);
-//     newQuestionDiv.appendChild(document.createElement('br'));
-//     newQuestionDiv.appendChild(document.createElement('br'));
-//     newQuestionDiv.appendChild(answer3Label);
-//     newQuestionDiv.appendChild(answer3Field);
-//     newQuestionDiv.appendChild(answer4Label);
-//     newQuestionDiv.appendChild(answer4Field);
-//     newQuestionDiv.appendChild(document.createElement('br'));
-//     newQuestionDiv.appendChild(document.createElement('br'));
-//     newQuestionDiv.appendChild(correctLabel);
-//     newQuestionDiv.appendChild(correctField);
-    
-//     questionsDiv.appendChild(document.createElement('br'));//Creates a break between each question
-//     questionsDiv.appendChild(newQuestionDiv);//Adds the question div to the screen
-    
-//     // newQuestionDiv.style.backgroundColor = randomColor();
-// }
+function updateDatabase(){
+    var name = document.getElementById('name').value;
+
+    var quiz = {id: 0, "name": name, "questions": getAllQuestions()};
+
+    if(validateQuiz(quiz)){
+        socket.emit('newQuiz', quiz);
+    }
+}
 
 //Called when user wants to exit quiz creator
 function cancelQuiz(){
@@ -158,18 +109,6 @@ function cancelQuiz(){
 socket.on('gameSaved', function(data){
     window.location.href = '/create';
 });
-
-// function randomColor(){
-    
-//     var colors = ['#4CAF50', '#f94a1e', '#3399ff', '#ff9933'];
-//     var randomNum = Math.floor(Math.random() * 4);
-//     return colors[randomNum];
-// }
-
-// function setBGColor(){
-    // var randColor = randomColor();
-//     document.getElementById('question-field').style.backgroundColor = randColor;
-// }
 
 function addQuestion() {
     ++questionNum;
@@ -220,8 +159,6 @@ function moveQuestionDown(qNo) {
         setQuestion(qNo, nextQ);
     }
 }
-
-
 
 (function () {
     addQuestion();

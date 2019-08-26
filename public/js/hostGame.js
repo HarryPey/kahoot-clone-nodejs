@@ -154,7 +154,7 @@ function updateTimer(cd){
     }
 
     timer = setInterval(function(){
-        time -= 1;
+        --time;
         el.timerText.innerHTML = Mustache.render(el.tplTimeLeft.innerHTML, {time: time});
         if(time == 0){
             socket.emit('timeUp');
