@@ -87,6 +87,8 @@ function validateQuiz(quiz) {
     if(errors) {
         alert(errorMsg);
     }
+
+    return !errors;
 }
 
 function updateDatabase(){

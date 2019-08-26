@@ -40,6 +40,7 @@ function initEl() {
         winner5: elId('winner5'),
         winnerTitle: elId('winnerTitle'),
         leaderboard: document.getElementsByClassName('ques__leaderboard')[0],
+        chart: document.getElementsByClassName('ques__chart')[0],
     };
 }
 
@@ -140,6 +141,7 @@ socket.on('questionOver', function(playerData, correct){
 
 function nextQuestion(){
     el.nextQButton.style.display = "none";
+    el.chart.innerHTML = '';
     el.answer.classList.remove('incorrect');
     
     el.playersAnswered.style.display = "block";
