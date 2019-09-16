@@ -2,9 +2,24 @@
 <html>
     <head>
         <title>KwizzMania</title>
-        <link rel = "stylesheet" href = "css/index.css">
+
+        <link rel="stylesheet" href="css/index.min.css">
+        
+        <link rel="preload" href="https://fonts.gstatic.com/s/pacifico/v15/FwZY7-Qmy14u9lezJ-6H6Mk.woff2" as="font">
+        <link rel="preload" href="https://fonts.gstatic.com/s/raleway/v14/1Ptug8zYS_SKggPNyC0ITw.woff2" as="font">
+        <link rel="preload" href="https://fonts.googleapis.com/css?family=Raleway|Pacifico" as="style">
+
         <link href="https://fonts.googleapis.com/css?family=Raleway|Pacifico" rel="stylesheet">
+        
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <link rel="prefetch" href="../css/lobby.min.css" as="style">
+        <link rel="prefetch" href="../css/playerGameView.min.css" as="style">
+
+        <link rel="prefetch" href="../socket.io/socket.io.js" as="script">
+        <link rel="prefetch" href="../js/libs/deparam.min.js" as="script">
+        <link rel="prefetch" href="../js/lobby.min.js" as="script">
+        <link rel="prefetch" href="../../js/playerGame.min.js" as="script">
     </head>
     <body>
         <div id="flex-container">
@@ -39,10 +54,8 @@
                         <button id = "joinButton">Join</button>
                     </div>
                 </form>
-                <br/>
-                <!-- <center><a href = "/create/" id = "host">Click here to host a Kahoot!</a></center> -->
             </div>
         </div>
-        <script src="./js/index.js"></script>
+        <script src="./js/index.min.js"></script>
     </body>
 </html>

@@ -2,14 +2,14 @@
 <html>
     <head>
         <title>Lobby | KwizzMania</title>
-        <link rel = "stylesheet" href = "../css/lobby.css">
-        <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
+        <link rel="stylesheet" href="../css/lobby.min.css">
+        <link href="https://fonts.googleapis.com/css?family=Raleway|Pacifico" rel="stylesheet">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body>
         <div id="user-joined">
-            <h1 id = "title1">Waiting on host to start game</h1>
-            <h3 id = "title2">Do you see your name on the screen?</h3>
+            <h1 id="title1">Waiting on host to start game</h1>
+            <h3 id="title2">Do you see your name on the screen?</h3>
             <div class="loader"></div>
         </div>
         <div id="user-exists" class="error">
@@ -17,9 +17,8 @@
             <a href="/">Click here to try with a different name!</a></h1>
         </div>
     </body>
-    <script src = "../socket.io/socket.io.js"></script>
-    <script src = "../js/libs/jqueryLibrary.js"></script>
-    <script src = "../js/libs/deparam.js"></script>
-    <script src = "../js/lobby.js"></script>
-    
+    <script src="../socket.io/socket.io.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="../js/libs/deparam.min.js"></script>
+    <script src="../js/lobby.min.js"></script>
 </html>

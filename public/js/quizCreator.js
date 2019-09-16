@@ -2,6 +2,25 @@ var socket = io();
 var questionNum = 0;
 var questionFieldTemplate = document.querySelector('#question-field-template').innerHTML;
 
+function deleteQuestion(qNo) {
+    var allQuestions = document.getElementsByClassName('question-field');
+    var allQuestionsLength = allQuestions.length;
+
+    for(var i=qNo; i<allQuestionsLength; ++i) {
+        moveQuestionDown(i);
+    }
+
+    var toDelete = document.getElementById('question-' + allQuestionsLength);
+
+    toDelete.remove();
+    --questionNum;
+
+    // add question when there is only one question
+    if ( allQuestionsLength == 1 ) {
+        addQuestion();
+    }
+}
+
 function setQuestion(qNo, question) {
     var q = '#question-' + qNo;
     var quesElem = document.querySelector(q);

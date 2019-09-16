@@ -1,13 +1,17 @@
-# kahoot-clone-nodejs
-<p>This project is a kahoot clone that uses nodejs and mongodb with capability of multiple ongoing games.</p>
-<p><strong>Note:</strong> This is a clone of <a href="https://github.com/ethanbrimhall/kahoot-clone-nodejs">ethanbrimhall/kahoot-clone-nodejs</a></p>
-<h3>Instructions:</h3>
+# KwizzMania (kahoot-clone-nodejs)
+This project is a kahoot clone that uses nodejs and mongodb with capability of multiple ongoing games.
 
-- Install MongoDB: `sudo apt-get install mongodb`</li>
-- Start MongoDB: `sudo service mongodb start`</li>
--  Execute `npm install` into the project root folder</li>
--  Start Server: `nodejs server/server.js`</li>
-</ol>
+**Note:** This is a clone of <a href="https://github.com/ethanbrimhall/kahoot-clone-nodejs">ethanbrimhall/kahoot-clone-nodejs</a>
 
-<h3>ScreenShots:</h3>
+### Instructions:
+
+1. Install MongoDB: `sudo apt-get install mongodb`.
+2. Start MongoDB: `sudo service mongodb start`.
+3. Execute `npm install` into the project root folder.
+4. Install `grunt` as a global dependency (`npm install grunt -g`)
+5. Execute `grunt` in the project root.
+6. Start Server: `nodejs server/server.js`.
+
+
+### ScreenShots:
 Screenshots will be uploaded shortly
