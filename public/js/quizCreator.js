@@ -12,7 +12,6 @@ function deleteQuestion(qNo) {
 
     var toDelete = document.getElementById('question-' + allQuestionsLength);
 
-    // if ( allQuestions.length > 1 ) {
     toDelete.remove();
     --questionNum;
 
@@ -20,9 +19,6 @@ function deleteQuestion(qNo) {
     if ( allQuestionsLength == 1 ) {
         addQuestion();
     }
-    // } else {
-        
-    // }
 }
 
 function setQuestion(qNo, question) {

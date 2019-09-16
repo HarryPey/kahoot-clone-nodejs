@@ -3,13 +3,16 @@ const path = require('path');
 const http = require('http');
 const express = require('express');
 const socketIO = require('socket.io');
+const shrinkRay = require('shrink-ray-current');
 
 //Import classes
 const { LiveGames } = require('./utils/liveGames');
 const { Players } = require('./utils/players');
 
 const publicPath = path.join(__dirname, '../public');
+
 var app = express();
+
 var server = http.createServer(app);
 var io = socketIO(server);
 var games = new LiveGames();
@@ -27,6 +30,7 @@ const DB_CONFIG = {
     gameCollectin: 'KwizzMania_game',
 };
 
+app.use(shrinkRay());
 app.use(express.static(publicPath));
 
 //Starting server on port 3000
